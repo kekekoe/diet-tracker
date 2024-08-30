@@ -1,0 +1,146 @@
+body {
+    background-color: #fbfbf2;
+    margin: 0; 
+    padding: 0; 
+}
+
+.header {
+    background-color: #fff0fe;
+    width: 100%; 
+    height: 80px;
+    position: fixed; 
+    top: 0;
+    z-index: 1000; 
+}
+
+.items {
+    margin-top: 20px; 
+
+    ul {
+        list-style-type: none;
+    }
+    
+    li {
+        display: inline; 
+        margin-right: 30px;
+        font-size: large;
+        color: #d1b3c6;
+    }
+
+    a {
+        text-decoration: none; 
+        color: inherit;
+        padding: 10px; 
+        display: inline-block; 
+    }
+    
+    a:hover {
+        color: #b99eaf; 
+        cursor: pointer; 
+    }
+}
+
+.main {
+    padding-top: 80px; 
+}
+
+.home {
+    text-align: center;
+
+    p {
+        padding: 8px;
+        margin-top: 2px;
+        margin-bottom: 0;
+    }
+}
+
+.container{
+    background-color: #fff;
+    width: 500px;
+    border-radius: 5px;
+    margin: auto;
+    margin-top: 30px;
+    padding: 20px;
+    font-size: medium;
+}
+
+.textCals{
+    margin-left: 10px;
+}
+
+.entryContainer {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.entryContainer p {
+    margin: 0;
+    flex: 1;
+}
+
+.entryContainer button {
+    margin-left: 5px;
+}
+
+
+#editForm {
+    position: absolute;
+    display: none; 
+    background: #f9f9f9;
+    border: 1px solid #ddd;
+    padding: 10px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    z-index: 10;
+}
+
+textarea#foodInput {
+    width: 490px; 
+    height: 20px; 
+}
+
+.reports{
+    ul {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+        text-indent: 20px;
+    }
+
+    li {
+        display: block;
+        font-size: medium;
+        margin: 10px 0;
+    }
+}
+
+@media(max-width: 800px){
+    .container{
+        width: 300px;
+        margin-top: 10px;
+    }
+
+    #home{
+        margin-top: 20px;
+    }
+    textarea#foodInput {
+        width: 290px; 
+        height: 20px; 
+    }
+
+    textarea#editTextArea {
+        width: 270px; 
+        height: 80px; 
+    }
+
+    .header{
+        li{
+            margin-right: 5px;
+            font-size: medium;
+        }
+        
+    }
+
+    
+    
+}

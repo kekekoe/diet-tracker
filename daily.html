@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="styles.css">
+    <script src="script.js"></script>
+    <title>riri's tracker ꒰ᐢ. .ᐢ꒱ </title>
+</head>
+<body>
+    <div class="page">
+        <div class="header">
+            <div class="items">
+                <ul>
+                    <li><a href="index.html">home</a></li>
+                    <li><a href="daily.html">daily tracker</a></li>
+                    <li><a href="weight.html">weight and bmi</a></li>
+                    <li><a href="reports.html">reports</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="main" id="main">
+            <div class="container daily">
+                <p style="font-size: larger;">daily tracker</p>
+                <p>cal limit: 995cals</p>
+                <div class="textCals"></div>
+
+                <div id="editForm" style="display: none; margin-top: 20px;">
+                    <textarea id="editTextArea" rows="4" cols="50"></textarea>
+                    <br>
+                    <button onclick="saveEdit()">save</button>
+                    <button onclick="cancelEdit()">cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
