@@ -59,7 +59,7 @@ body {
     width: 500px;
     border-radius: 5px;
     margin: auto;
-    margin-top: 20px;
+    margin-top: 30px;
     padding: 20px;
     font-size: medium;
 }
@@ -200,40 +200,9 @@ textarea#foodInput {
 
 hr {
     display: block;
-    height: 1px;
+    height: 0.5px;
     border: 0;
     border-top: 1px solid #ccc;
     margin: 1em 0;
     padding: 0;
   }
-
-  .container.exerciseTracker {
-    margin: 20px;
-}
-
-.container.exerciseTracker .dateHeader {
-    font-weight: bold;
-}
-
-.container.exerciseTracker .dateEntriesContainer {
-    margin-left: 20px;
-}
-
-.entryContainer {
-    margin-bottom: 10px;
-}
-
-.entryContent {
-    display: inline-block;
-    width: 70%;
-}
-
-.buttonContainer {
-    display: inline-block;
-    width: 30%;
-    text-align: right;
-}
-
-.editButton, .deleteButton {
-    margin-left: 5px;
-}

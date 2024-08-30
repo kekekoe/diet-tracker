@@ -177,7 +177,7 @@ function calculateBMI(weight) {
     return (weight / (heightInMeters * heightInMeters)).toFixed(2);
 }
 
-const TDEE = 1769; 
+const TDEE = 1596; 
 const calorieLimit = 995; 
 
 function updateReports() {
@@ -198,13 +198,19 @@ function updateReports() {
     const weightToLose = goalWeight - parseFloat(entry.weight || 0);
     document.getElementById('kgToLose').innerText = `kg to lose: ${weightToLose.toFixed(1)}`;
 
+    let savedExercises = JSON.parse(localStorage.getItem('exerciseEntries')) || {};
+    const today = new Date();
+    const formattedDate = `${today.getMonth() + 1}/${today.getDate()}/${today.getFullYear()}`;
+    const caloriesBurned = savedExercises[formattedDate] || 0;
     const totalCaloriesConsumed = calculateTotalCaloriesConsumed();
     const caloriesLost = TDEE - totalCaloriesConsumed;
     const caloriesLeft = calorieLimit - totalCaloriesConsumed;
 
     document.getElementById('totalCaloriesConsumed').innerText = `total calories consumed today: ${totalCaloriesConsumed}`;
-    document.getElementById('caloriesLost').innerText = `calories burned: ${caloriesLost}`;
+    document.getElementById('caloriesLost').innerText = `total daily energy expenditure: ${caloriesLost}`;
     document.getElementById('caloriesLeft').innerText = `calories left: ${caloriesLeft}`;
+    document.getElementById('caloriesBurned').innerText = `calories burned from exercise: ${caloriesBurned}`;
+
 }
 
 function calculateTotalCaloriesConsumed() {
@@ -240,7 +246,9 @@ function updateWeightTracker() {
 
     weightContainer.innerHTML = '';
 
-    Object.keys(savedWeights).forEach(date => {
+    const sortedDates = Object.keys(savedWeights).sort((a, b) => new Date(b) - new Date(a));
+
+    sortedDates.forEach(date => {
         const entry = savedWeights[date];
         const weightEntry = document.createElement('p');
         weightEntry.innerText = `${date}: ${entry.weight}kg, bmi ${entry.bmi}`;
@@ -252,3 +260,29 @@ function loadSavedWeightData() {
     updateWeightTracker();
 }
 
+function addExercise() {
+    const exerciseCaloriesInput = document.getElementById('caloriesBurned').value;
+
+    if (exerciseCaloriesInput.trim() === '' || isNaN(exerciseCaloriesInput)) return;
+
+    const date = new Date();
+    const formattedDate = `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;
+    const caloriesBurned = parseInt(exerciseCaloriesInput);
+
+    let savedExercises = JSON.parse(localStorage.getItem('exerciseEntries')) || {};
+    savedExercises[formattedDate] = caloriesBurned; 
+    localStorage.setItem('exerciseEntries', JSON.stringify(savedExercises));
+
+    document.getElementById('caloriesBurned').value = '';
+}
+
+function clearCaloriesBurned() {
+    const today = new Date();
+    const formattedDate = `${today.getMonth() + 1}/${today.getDate()}/${today.getFullYear()}`;
+    
+    let savedExercises = JSON.parse(localStorage.getItem('exerciseEntries')) || {};
+    delete savedExercises[formattedDate]; 
+    localStorage.setItem('exerciseEntries', JSON.stringify(savedExercises));
+    
+    updateReports();
+}
