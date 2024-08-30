@@ -178,9 +178,11 @@ function updateReports() {
 
     const totalCaloriesConsumed = calculateTotalCaloriesConsumed();
     const caloriesLost = TDEE - totalCaloriesConsumed;
+    const caloriesLeft = calorieLimit - totalCaloriesConsumed;
 
     document.getElementById('totalCaloriesConsumed').innerText = `total calories consumed today: ${totalCaloriesConsumed}`;
     document.getElementById('caloriesLost').innerText = `calories burned: ${caloriesLost}`;
+    document.getElementById('caloriesLeft').innerText = `calories left: ${caloriesLeft}`;
 }
 
 function calculateTotalCaloriesConsumed() {
