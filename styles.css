@@ -68,30 +68,14 @@ body {
     margin-left: 10px;
 }
 
-.entryContainer {
-    display: flex;
-    align-items: center;
-    margin-bottom: 10px;
-}
-
-.entryContainer p {
-    margin: 0;
-    flex: 1;
-}
-
 .entryContainer button {
-    margin-left: 5px;
-}
-
-
-#editForm {
-    position: absolute;
-    display: none; 
-    background: #f9f9f9;
-    border: 1px solid #ddd;
-    padding: 10px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    z-index: 10;
+    background: none;
+    border: none;
+    cursor: pointer;
+    margin: 0 5px;
+    padding: 0;
+    display: inline-flex;
+    align-items: center;
 }
 
 textarea#foodInput {
@@ -121,16 +105,16 @@ textarea#foodInput {
 }
 
 .modal {
-    position: fixed; /* Position it fixed to cover the entire screen */
+    position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.7); /* Dark background with transparency */
+    background: rgba(0, 0, 0, 0.7); 
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 9999; /* Ensure it is on top of other elements */
+    z-index: 9999;
 }
 
 .modal-image {
@@ -140,7 +124,7 @@ textarea#foodInput {
 }
 
 .modal-close-button {
-    position: absolute; /* Position it absolutely within the modal */
+    position: absolute; 
     top: 10px;
     right: 10px;
     background: white;
@@ -148,14 +132,12 @@ textarea#foodInput {
     border-radius: 5px;
     padding: 5px 10px;
     cursor: pointer;
-    z-index: 10000; /* Ensure it's above other modal content */
+    z-index: 10000;
 }
-
-
 
 @media(max-width: 800px){
     .container{
-        width: 300px;
+        width: 330px;
         margin-top: 10px;
     }
 
@@ -163,7 +145,7 @@ textarea#foodInput {
         margin-top: 20px;
     }
     textarea#foodInput {
-        width: 290px; 
+        width: 320px; 
         height: 20px; 
     }
 
@@ -179,8 +161,40 @@ textarea#foodInput {
         }
         
     }
+}
 
-    
-    
+.entryContainer {
+    display: flex;
+    align-items: center;
+}
+
+.entryContent {
+    flex: 1;
+    display: flex;
+    align-items: center;
+}
+
+.buttonContainer {
+    display: flex;
+    align-items: center;
+}
+
+.buttonContainer button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    display: inline-flex;
+    align-items: center;
+}
+
+.entryContainer svg {
+    width: 20px;
+    height: 20px;
+    fill: #333; 
+}
+
+.buttonContainer button:hover svg {
+    fill: #121212; 
 }
 
