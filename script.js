@@ -177,7 +177,7 @@ function calculateBMI(weight) {
     return (weight / (heightInMeters * heightInMeters)).toFixed(2);
 }
 
-const TDEE = 1569; 
+const TDEE = 1769; 
 const calorieLimit = 995; 
 
 function updateReports() {
