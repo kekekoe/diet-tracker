@@ -202,7 +202,7 @@ function updateReports() {
     const today = new Date();
     const formattedDate = `${today.getMonth() + 1}/${today.getDate()}/${today.getFullYear()}`;
     const caloriesBurned = savedExercises[formattedDate] || 0;
-    const totalCaloriesConsumed = calculateTotalCaloriesConsumed();
+    const totalCaloriesConsumed = calculateTotalCaloriesConsumed() - caloriesBurned;
     const caloriesLost = TDEE - totalCaloriesConsumed;
     const caloriesLeft = calorieLimit - totalCaloriesConsumed;
 
@@ -210,7 +210,7 @@ function updateReports() {
     document.getElementById('caloriesLost').innerText = `total daily energy expenditure: ${caloriesLost}`;
     document.getElementById('caloriesLeft').innerText = `calories left: ${caloriesLeft}`;
     document.getElementById('caloriesBurned').innerText = `calories burned from exercise: ${caloriesBurned}`;
-
+    document.getElementById('calorieLimit').innerText = `calorie limit: ${calorieLimit}`;
 }
 
 function calculateTotalCaloriesConsumed() {
