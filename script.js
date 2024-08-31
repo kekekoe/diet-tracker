@@ -1,18 +1,21 @@
-let editDate = '';
-let editIndex = -1;
-let currentEditElement = null;
-
 document.addEventListener('DOMContentLoaded', () => {
     loadSavedData();
     loadSavedWeightData();
+    updateReports();
+    console.log('weight.html script loaded');
+    updateWeightTracker();
 });
+
+let editDate = '';
+let editIndex = -1;
+let currentEditElement = null;
 
 function addFood() {
     const foodInput = document.getElementById('foodInput').value;
     if (foodInput.trim() === '') return;
 
     const date = new Date();
-    const formattedDate = `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;
+    const formattedDate = `${date.getFullYear()}/${String(date.getMonth() + 1).padStart(2, '0')}/${String(date.getDate()).padStart(2, '0')}`;
     const time = `${date.getHours()}:${date.getMinutes() < 10 ? '0' : ''}${date.getMinutes()}`;
     const id = Date.now(); 
     const entry = { id, text: `${time} - ${foodInput}` };
@@ -35,7 +38,7 @@ function addExercise() {
     if (exerciseCaloriesInput.trim() === '' || isNaN(exerciseCaloriesInput)) return;
 
     const date = new Date();
-    const formattedDate = `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;
+    const formattedDate = `${date.getFullYear()}/${String(date.getMonth() + 1).padStart(2, '0')}/${String(date.getDate()).padStart(2, '0')}`;
     const time = `${date.getHours()}:${date.getMinutes() < 10 ? '0' : ''}${date.getMinutes()}`;
     const caloriesBurned = parseInt(exerciseCaloriesInput);
     const id = Date.now(); 
@@ -171,70 +174,23 @@ function cancelEdit() {
     document.getElementById('editForm').style.display = 'none';
 }
 
-const heightInMeters = 1.49;
-
-function addWeight() {
-    const weightInput = document.getElementById('weightInput').value;
-    if (weightInput.trim() === '') return;
-
-    const date = new Date();
-    const formattedDate = `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;
-    const weight = parseFloat(weightInput);
-    const bmi = calculateBMI(weight);
-
-    let savedWeights = JSON.parse(localStorage.getItem('weightEntries')) || {};
-    if (!savedWeights[formattedDate]) {
-        savedWeights[formattedDate] = { weight: weight, bmi: bmi };
-    } else {
-        savedWeights[formattedDate] = { weight: weight, bmi: bmi };
-    }
-
-    localStorage.setItem('weightEntries', JSON.stringify(savedWeights));
-
-    document.getElementById('weightInput').value = '';
-
-    updateWeightTracker();
-}
-
-function calculateBMI(weight) {
-    return (weight / (heightInMeters * heightInMeters)).toFixed(2);
-}
-
-function updateWeightTracker() {
-    const weightContainer = document.querySelector('.container.weight .weightEntries');
-    let savedWeights = JSON.parse(localStorage.getItem('weightEntries')) || {};
-
-    weightContainer.innerHTML = '';
-
-    const sortedDates = Object.keys(savedWeights).sort((a, b) => new Date(b) - new Date(a));
-
-    sortedDates.forEach(date => {
-        const entry = savedWeights[date];
-        const weightEntry = document.createElement('p');
-        weightEntry.innerText = `${date}: ${entry.weight}kg, bmi ${entry.bmi}`;
-        weightContainer.appendChild(weightEntry);
-    });
-}
-
 const TDEE = 1596;
 const calorieLimit = 995;
 
 function updateReports() {
     const now = new Date();
-    const options = { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' };
-    const formattedDateTime = now.toLocaleDateString('en-US', options).replace(',', '');
+    const formattedDateTime = `${now.getFullYear()}/${String(now.getMonth() + 1).padStart(2, '0')}/${String(now.getDate()).padStart(2, '0')} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}`;
 
     document.getElementById('dateTime').innerText = `as of ${formattedDateTime}:`;
 
-    let savedWeights = JSON.parse(localStorage.getItem('weightEntries')) || {};
-    let lastEntry = Object.keys(savedWeights).pop();
-    let entry = savedWeights[lastEntry] || { weight: '--', bmi: '--' };
+    let savedWeights = JSON.parse(localStorage.getItem('weightEntries')) || [];
+    let lastEntry = savedWeights.pop() || { weight: '--', bmi: '--' };
 
-    document.getElementById('currentWeight').innerText = `cw: ${entry.weight}kg`;
-    document.getElementById('currentBMI').innerText = `cbmi: ${entry.bmi}`;
+    document.getElementById('currentWeight').innerText = `cw: ${lastEntry.weight}kg`;
+    document.getElementById('currentBMI').innerText = `cbmi: ${lastEntry.bmi}`;
 
     const goalWeight = 35;
-    const weightToLose = goalWeight - parseFloat(entry.weight || 0);
+    const weightToLose = goalWeight - parseFloat(lastEntry.weight || 0);
     document.getElementById('kgToLose').innerText = `kg to lose: ${weightToLose.toFixed(1)}`;
 
     const totalCaloriesConsumed = calculateTotalCaloriesConsumed();
@@ -253,12 +209,12 @@ function updateReports() {
 function calculateTotalCaloriesConsumed() {
     let savedEntries = JSON.parse(localStorage.getItem('dailyTrackerEntries')) || {};
     const today = new Date();
-    const formattedDate = `${today.getMonth() + 1}/${today.getDate()}/${today.getFullYear()}`;
+    const formattedDate = `${today.getFullYear()}/${String(today.getMonth() + 1).padStart(2, '0')}/${String(today.getDate()).padStart(2, '0')}`;
     let totalCalories = 0;
 
     if (savedEntries[formattedDate]) {
         savedEntries[formattedDate].forEach(entry => {
-            if (!entry.text.includes("exercise")) { 
+            if (!entry.text.includes("exercise")) {
                 const calories = extractFoodCalories(entry.text);
                 if (!isNaN(calories)) {
                     totalCalories += calories;
@@ -273,12 +229,12 @@ function calculateTotalCaloriesConsumed() {
 function calculateTotalExerciseCalories() {
     let savedEntries = JSON.parse(localStorage.getItem('dailyTrackerEntries')) || {};
     const today = new Date();
-    const formattedDate = `${today.getMonth() + 1}/${today.getDate()}/${today.getFullYear()}`;
+    const formattedDate = `${today.getFullYear()}/${String(today.getMonth() + 1).padStart(2, '0')}/${String(today.getDate()).padStart(2, '0')}`;
     let totalExerciseCalories = 0;
 
     if (savedEntries[formattedDate]) {
         savedEntries[formattedDate].forEach(entry => {
-            if (entry.text.includes("exercise")) {  
+            if (entry.text.includes("exercise")) {
                 const calories = extractExerciseCalories(entry.text);
                 if (!isNaN(calories)) {
                     totalExerciseCalories += calories;
@@ -312,3 +268,53 @@ function loadSavedData() {
     updateDailyTracker();
     updateReports();
 }
+
+const heightInMeters = 1.49;
+
+function addWeight() {
+    const weightInput = document.getElementById('weightInput').value;
+
+    if (weightInput.trim() === '') return;
+
+    const date = new Date();
+    const formattedDate = `${date.getFullYear()}/${String(date.getMonth() + 1).padStart(2, '0')}/${String(date.getDate()).padStart(2, '0')}`;
+    const weight = parseFloat(weightInput);
+    const bmi = calculateBMI(weight);
+
+    let savedWeights = JSON.parse(localStorage.getItem('weightEntries')) || [];
+
+    const existingIndex = savedWeights.findIndex(entry => entry.date === formattedDate);
+    if (existingIndex > -1) {
+        savedWeights[existingIndex] = { date: formattedDate, weight: weight, bmi: bmi };
+    } else {
+        savedWeights.push({ date: formattedDate, weight: weight, bmi: bmi });
+    }
+
+    localStorage.setItem('weightEntries', JSON.stringify(savedWeights));
+    document.getElementById('weightInput').value = '';
+
+    updateWeightTracker();
+}
+
+function calculateBMI(weight) {
+    return (weight / (heightInMeters * heightInMeters)).toFixed(2);
+}
+
+function updateWeightTracker() {
+    const weightContainer = document.querySelector('.weightEntries');
+
+    if (!weightContainer) {
+        return;
+    }
+
+    let savedWeights = JSON.parse(localStorage.getItem('weightEntries')) || [];
+
+    weightContainer.innerHTML = '';
+
+    savedWeights.reverse().forEach(entry => {
+        const weightEntry = document.createElement('p');
+        weightEntry.innerText = `${entry.date}: ${entry.weight}kg, bmi ${entry.bmi || '--'}`;
+        weightContainer.appendChild(weightEntry);
+    });
+}
+
