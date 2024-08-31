@@ -290,7 +290,6 @@ function updateWeightTracker() {
 }
 
 const TDEE = 1554; 
-const calorieLimit = 700; 
 
 function updateReports() {
     const now = new Date();
@@ -299,28 +298,32 @@ function updateReports() {
 
     document.getElementById('dateTime').innerText = `as of ${formattedDateTime}`;
 
-    let savedWeights = JSON.parse(localStorage.getItem('weightEntries')) || {};
-    let lastEntry = Object.keys(savedWeights).pop();
-    let entry = savedWeights[lastEntry] || { weight: '--', bmi: '--' };
+    let savedEntries = getSavedEntries();
+    let savedWeights = getSavedWeights();
+    
+    const latestWeightEntryDate = Object.keys(savedWeights).pop() || '';
+    const latestWeightEntry = savedWeights[latestWeightEntryDate] || { weight: '--', bmi: '--' };
 
-    document.getElementById('currentWeight').innerText = `cw: ${entry.weight}kg`;
-    document.getElementById('currentBMI').innerText = `cbmi: ${entry.bmi}`;
+    document.getElementById('currentWeight').innerText = `cw: ${latestWeightEntry.weight}kg`;
+    document.getElementById('currentBMI').innerText = `cbmi: ${latestWeightEntry.bmi}`;
 
-    const goalWeight = 35;
-    const weightToLose = goalWeight - parseFloat(entry.weight || 0);
+    const goalWeight = getGoalWeight(); 
+    document.getElementById('goalWeight').innerText = `gw: ${goalWeight}kg`;
+
+    const weightToLose = goalWeight - parseFloat(latestWeightEntry.weight || 0);
     document.getElementById('kgToLose').innerText = `kg to lose: ${weightToLose.toFixed(1)}`;
 
     const totalCaloriesConsumed = calculateTotalCaloriesConsumed();
     const totalExerciseCalories = calculateTotalExerciseCalories();
-    const netCalories = totalCaloriesConsumed - totalExerciseCalories; 
+    const netCalories = totalCaloriesConsumed - totalExerciseCalories;
     const caloriesLost = TDEE - netCalories; 
-    const caloriesLeft = calorieLimit - totalCaloriesConsumed + totalExerciseCalories; 
+    const caloriesLeft = getCalorieLimit() - totalCaloriesConsumed + totalExerciseCalories; 
 
     document.getElementById('totalCaloriesConsumed').innerText = `total calories consumed today: ${totalCaloriesConsumed}`;
     document.getElementById('caloriesLost').innerText = `caloric deficit/surplus: ${caloriesLost}`;
     document.getElementById('caloriesLeft').innerText = `calories left: ${caloriesLeft}`;
     document.getElementById('caloriesBurned').innerText = `calories burned from exercise: ${totalExerciseCalories}`;
-    document.getElementById('calorieLimit').innerText = `calorie limit: ${calorieLimit}`;
+    document.getElementById('calorieLimit').innerText = `calorie limit: ${getCalorieLimit()}`;
     document.getElementById('stepsTakenToday').innerText = `steps taken today: ${calculateTotalSteps()}`;
 }
 
@@ -442,4 +445,34 @@ function calculateTotalSteps() {
 function extractSteps(text) {
     const match = text.match(/steps:\s*(\d+)/i);
     return match ? parseInt(match[1], 10) : 0;
+}
+
+function addGoalWeight() {
+    const goalWeightInput = document.getElementById('enterNewGoalWeight').value;
+    if (goalWeightInput.trim() === '' || isNaN(goalWeightInput)) return;
+
+    const goalWeight = parseFloat(goalWeightInput);
+    localStorage.setItem('goalWeight', goalWeight);
+
+    document.getElementById('enterNewGoalWeight').value = '';
+    updateReports();
+}
+
+function addNewCalorieLimit() {
+    const calorieLimitInput = document.getElementById('newCalorieLimit').value;
+    if (calorieLimitInput.trim() === '' || isNaN(calorieLimitInput)) return;
+
+    const calorieLimit = parseInt(calorieLimitInput, 10);
+    localStorage.setItem('calorieLimit', calorieLimit);
+
+    document.getElementById('newCalorieLimit').value = '';
+    updateReports();
+}
+
+function getGoalWeight() {
+    return parseFloat(localStorage.getItem('goalWeight')) || 35; 
+}
+
+function getCalorieLimit() {
+    return parseInt(localStorage.getItem('calorieLimit')) || 700;
 }
