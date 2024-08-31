@@ -116,7 +116,7 @@ function updateDailyTracker() {
         const sortedDates = months[monthYear].sort((a, b) => new Date(b.date) - new Date(a.date));
 
         sortedDates.forEach(({ date, entries }) => {
-            const weightDisplay = savedWeights[date] ? `${savedWeights[date].weight}kg` : 'No weight data';
+            const weightDisplay = savedWeights[date] ? `${savedWeights[date].weight}kg` : 'no weight data';
             const dateHeaderText = `${date}: ${weightDisplay}`;
 
             const dateHeader = document.createElement('p');
