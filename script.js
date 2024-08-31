@@ -4,6 +4,7 @@ let currentEditElement = null;
 
 document.addEventListener('DOMContentLoaded', () => {
     loadSavedData();
+    loadSavedWeightData();
 });
 
 function addFood() {
@@ -54,7 +55,6 @@ function addExercise() {
     updateReports();
 }
 
-
 function updateDailyTracker() {
     const dailyTrackerContainer = document.querySelector('.container .textCals');
     let savedEntries = JSON.parse(localStorage.getItem('dailyTrackerEntries')) || {};
@@ -64,8 +64,11 @@ function updateDailyTracker() {
 
     sortedDates.forEach(date => {
         const dateHeader = document.createElement('p');
-        dateHeader.innerText = `${date}`;
-        dateHeader.style.fontWeight = 'bold';
+        dateHeader.innerText = `${date}:`;
+        dateHeader.style.fontStyle = 'italic';
+        dateHeader.style.fontSize = 'large';
+        dateHeader.style.marginBottom = '0px';
+        dateHeader.style.marginTop = '20px';
         dateHeader.className = 'dateHeader';
 
         dailyTrackerContainer.appendChild(dateHeader);
@@ -147,11 +150,6 @@ function saveEdit() {
     }
 }
 
-
-function cancelEdit() {
-    document.getElementById('editForm').style.display = 'none';
-}
-
 function deleteEntry(date, id) {
     let savedEntries = JSON.parse(localStorage.getItem('dailyTrackerEntries')) || {};
 
@@ -169,16 +167,11 @@ function deleteEntry(date, id) {
     }
 }
 
-function loadSavedData() {
-    updateDailyTracker();
-    updateReports();
+function cancelEdit() {
+    document.getElementById('editForm').style.display = 'none';
 }
 
 const heightInMeters = 1.49;
-
-document.addEventListener('DOMContentLoaded', () => {
-    loadSavedWeightData();
-});
 
 function addWeight() {
     const weightInput = document.getElementById('weightInput').value;
@@ -205,6 +198,22 @@ function addWeight() {
 
 function calculateBMI(weight) {
     return (weight / (heightInMeters * heightInMeters)).toFixed(2);
+}
+
+function updateWeightTracker() {
+    const weightContainer = document.querySelector('.container.weight .weightEntries');
+    let savedWeights = JSON.parse(localStorage.getItem('weightEntries')) || {};
+
+    weightContainer.innerHTML = '';
+
+    const sortedDates = Object.keys(savedWeights).sort((a, b) => new Date(b) - new Date(a));
+
+    sortedDates.forEach(date => {
+        const entry = savedWeights[date];
+        const weightEntry = document.createElement('p');
+        weightEntry.innerText = `${date}: ${entry.weight}kg, bmi ${entry.bmi}`;
+        weightContainer.appendChild(weightEntry);
+    });
 }
 
 const TDEE = 1596;
@@ -295,33 +304,11 @@ document.addEventListener('DOMContentLoaded', () => {
     updateReports();
 });
 
-function updateWeightTracker() {
-    const weightContainer = document.querySelector('.container.weight .weightEntries');
-    let savedWeights = JSON.parse(localStorage.getItem('weightEntries')) || {};
-
-    weightContainer.innerHTML = '';
-
-    const sortedDates = Object.keys(savedWeights).sort((a, b) => new Date(b) - new Date(a));
-
-    sortedDates.forEach(date => {
-        const entry = savedWeights[date];
-        const weightEntry = document.createElement('p');
-        weightEntry.innerText = `${date}: ${entry.weight}kg, bmi ${entry.bmi}`;
-        weightContainer.appendChild(weightEntry);
-    });
-}
-
 function loadSavedWeightData() {
     updateWeightTracker();
 }
 
-function clearCaloriesBurned() {
-    const today = new Date();
-    const formattedDate = `${today.getMonth() + 1}/${today.getDate()}/${today.getFullYear()}`;
-
-    let savedExercises = JSON.parse(localStorage.getItem('exerciseEntries')) || {};
-    delete savedExercises[formattedDate];
-    localStorage.setItem('exerciseEntries', JSON.stringify(savedExercises));
-
+function loadSavedData() {
+    updateDailyTracker();
     updateReports();
 }
