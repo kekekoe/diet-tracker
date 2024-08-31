@@ -1,10 +1,13 @@
 let editDate = '';
 let editIndex = -1;
 let currentEditElement = null;
+let currentEditDate = '';
+let currentEditId = -1;
 
 document.addEventListener('DOMContentLoaded', () => {
     loadSavedData();
     loadSavedWeightData();
+    document.querySelector('.container .textCals').addEventListener('click', handleButtonClick);
 });
 
 function addFood() {
@@ -55,82 +58,150 @@ function addExercise() {
     updateReports();
 }
 
+let expandedMonths = new Set();  
+
 function updateDailyTracker() {
     const dailyTrackerContainer = document.querySelector('.container .textCals');
     let savedEntries = getSavedEntries();
     let savedWeights = getSavedWeights();
 
     dailyTrackerContainer.innerHTML = '';
-    const sortedDates = Object.keys(savedEntries).sort((a, b) => new Date(b) - new Date(a));
+    
+    const months = {};
+    Object.keys(savedEntries).forEach(date => {
+        const [month, day, year] = date.split('/');
+        const monthYear = `${year}-${month}`; 
 
-    if (sortedDates.length === 0) {
+        if (!months[monthYear]) {
+            months[monthYear] = [];
+        }
+
+        months[monthYear].push({ date, entries: savedEntries[date] });
+    });
+
+    const sortedMonths = Object.keys(months).sort((a, b) => new Date(b) - new Date(a));
+
+    if (sortedMonths.length === 0) {
         dailyTrackerContainer.innerHTML = '<p>no entries found . . . ໒꒰ྀིっ -｡꒱ྀི১ </p>';
         return;
     }
 
-    sortedDates.forEach(date => {
-        const weightDisplay = savedWeights[date] ? `${savedWeights[date].weight}kg` : 'No weight data';
-        const dateHeaderText = `${date}: ${weightDisplay}`;
+    sortedMonths.forEach(monthYear => {
+        const [year, month] = monthYear.split('-');
+        const monthName = new Date(year, month - 1).toLocaleString('default', { month: 'long' });
+        const monthHeaderText = `${monthName} ${year}`;
+        
+        const monthHeader = document.createElement('div');
+        monthHeader.className = 'monthHeader';
+        monthHeader.innerHTML = `
+            <div style="display: flex; align-items: center; font-style: italic; font-size: large; margin-top: -10px">
+                ${monthHeaderText}
+                <svg class="expandCollapseIcon" style="cursor: pointer; margin-left: 10px;" xmlns="http://www.w3.org/2000/svg" height="22px" viewBox="0 0 24 24" width="22px" fill="#000">
+                    <path d="M0 0h24v24H0z" fill="none"/>
+                    <path d="M7 10l5 5 5-5H7z"/> 
+                </svg>
+            </div>
+        `;    
 
-        const dateHeader = document.createElement('p');
-        dateHeader.innerText = dateHeaderText;
-        dateHeader.style.fontStyle = 'italic';
-        dateHeader.style.fontSize = 'large';
-        dateHeader.style.marginBottom = '-5px';
-        dateHeader.style.marginTop = '10px';
-        dateHeader.className = 'dateHeader';
+        const monthEntriesContainer = document.createElement('div');
+        monthEntriesContainer.className = 'monthEntriesContainer';
+        
+        if (expandedMonths.has(monthYear)) {
+            monthEntriesContainer.style.display = 'block';
+            monthHeader.querySelector('.expandCollapseIcon').innerHTML = '<path d="M0 0h24v24H0z" fill="none"/><path d="M19 13H5v-2h14v2z"/>';
+        } else {
+            monthEntriesContainer.style.display = 'none';
+        }
 
-        dailyTrackerContainer.appendChild(dateHeader);
+        const sortedDates = months[monthYear].sort((a, b) => new Date(b.date) - new Date(a.date));
 
-        const dateEntriesContainer = document.createElement('div');
-        dateEntriesContainer.className = 'dateEntriesContainer';
+        sortedDates.forEach(({ date, entries }) => {
+            const weightDisplay = savedWeights[date] ? `${savedWeights[date].weight}kg` : 'No weight data';
+            const dateHeaderText = `${date}: ${weightDisplay}`;
 
-        savedEntries[date].reverse().forEach(entry => {
-            const entryContainer = document.createElement('div');
-            entryContainer.className = 'entryContainer';
+            const dateHeader = document.createElement('p');
+            dateHeader.innerText = dateHeaderText;
+            dateHeader.style.fontStyle = 'italic';
+            dateHeader.style.fontSize = 'large';
+            dateHeader.style.marginBottom = '-5px';
+            dateHeader.style.marginTop = '5px';
+            dateHeader.style.marginLeft= '15px'
+            dateHeader.className = 'dateHeader';
 
-            const entryContent = document.createElement('div');
-            entryContent.className = 'entryContent';
-            entryContent.innerHTML = `<p>${entry.text}</p>`;
-            entryContent.style.marginBottom = '3px';
-            entryContent.style.textIndent = '15px';
+            monthEntriesContainer.appendChild(dateHeader);
 
-            const buttonContainer = document.createElement('div');
-            buttonContainer.className = 'buttonContainer';
-            buttonContainer.innerHTML = `
-                <button class="editButton" data-id="${entry.id}">
-                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#e8eaed">
-                        <path d="M3 17.25V21h3.75L15 14.25l-3.75-3.75L3 17.25zM15.28 6.72l1.48 1.48-6.3 6.3-1.48-1.48 6.3-6.3zM16.89 4.5l1.59 1.59c.25.25.39.58.39.93s-.14.68-.39.93l-7.38 7.38-1.56-1.56 7.38-7.38c.25-.25.58-.39.93-.39s.68.14.93.39z"/>
-                    </svg>
-                </button>
-                <button class="deleteButton" data-id="${entry.id}">
-                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#e8eaed">
-                        <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zm2-14h8V4H8v1zm2 10h-2v-6h2v6zm4-6h-2v6h2v-6zm4-1h-1V3H5v1H4v2h16V4h-1v1z"/>
-                    </svg>
-                </button>
-            `;
+            const dateEntriesContainer = document.createElement('div');
+            dateEntriesContainer.className = 'dateEntriesContainer';
 
-            buttonContainer.querySelector('.editButton').onclick = () => editEntry(date, entry.id, entry.text, entryContainer);
-            buttonContainer.querySelector('.deleteButton').onclick = () => deleteEntry(date, entry.id);
+            entries.reverse().forEach(entry => {
+                const entryContainer = document.createElement('div');
+                entryContainer.className = 'entryContainer';
 
-            entryContainer.appendChild(entryContent);
-            entryContainer.appendChild(buttonContainer);
+                const entryContent = document.createElement('div');
+                entryContent.className = 'entryContent';
+                entryContent.innerHTML = `<p>${entry.text}</p>`;
+                entryContent.style.marginBottom = '-10px';
+                entryContent.style.marginLeft = '30px';
 
-            dateEntriesContainer.appendChild(entryContainer);
+                const buttonContainer = document.createElement('div');
+                buttonContainer.className = 'buttonContainer';
+                buttonContainer.innerHTML = `
+                    <button class="editButton" data-id="${entry.id}">
+                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#e8eaed">
+                            <path d="M3 17.25V21h3.75L15 14.25l-3.75-3.75L3 17.25zM15.28 6.72l1.48 1.48-6.3 6.3-1.48-1.48 6.3-6.3zM16.89 4.5l1.59 1.59c.25.25.39.58.39.93s-.14.68-.39.93l-7.38 7.38-1.56-1.56 7.38-7.38c.25-.25.58-.39.93-.39s.68.14.93.39z"/>
+                        </svg>
+                    </button>
+                    <button class="deleteButton" data-id="${entry.id}">
+                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#e8eaed">
+                            <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zm2-14h8V4H8v1zm2 10h-2v-6h2v6zm4-6h-2v6h2v-6zm4-1h-1V3H5v1H4v2h16V4h-1v1z"/>
+                        </svg>
+                    </button>
+                `;
+
+                buttonContainer.querySelector('.editButton').onclick = () => editEntry(date, entry.id, entry.text, entryContainer);
+                buttonContainer.querySelector('.deleteButton').onclick = () => deleteEntry(date, entry.id);
+
+                entryContainer.appendChild(entryContent);
+                entryContainer.appendChild(buttonContainer);
+
+                dateEntriesContainer.appendChild(entryContainer);
+            });
+
+            monthEntriesContainer.appendChild(dateEntriesContainer);
         });
 
-        dailyTrackerContainer.appendChild(dateEntriesContainer);
+        dailyTrackerContainer.appendChild(monthHeader);
+        dailyTrackerContainer.appendChild(monthEntriesContainer);
+
+        monthHeader.querySelector('.expandCollapseIcon').onclick = () => {
+            const isCollapsed = monthEntriesContainer.style.display === 'none';
+            monthEntriesContainer.style.display = isCollapsed ? 'block' : 'none';
+
+            monthHeader.querySelector('.expandCollapseIcon').innerHTML = isCollapsed
+                ? '<path d="M0 0h24v24H0z" fill="none"/><path d="M19 13H5v-2h14v2z"/>'
+                : '<path d="M0 0h24v24H0z" fill="none"/><path d="M7 10l5 5 5-5H7z"/>';
+
+            if (isCollapsed) {
+                expandedMonths.add(monthYear);
+            } else {
+                expandedMonths.delete(monthYear);
+            }
+        };
     });
 }
 
 function editEntry(date, id, text, entryContainer) {
     editDate = date;
     editIndex = id;
-    currentEditElement = { time: text.split(' - ')[0], text: text.split(' - ')[1] };
-    document.getElementById('editTextArea').value = currentEditElement.text;
-    document.getElementById('editForm').style.display = 'block';
-}
+    const [time, entryText] = text.split(' - ');
+    currentEditElement = { time, text: entryText };
 
+    document.getElementById('editTextArea').value = currentEditElement.text;
+    
+    const editForm = document.getElementById('editForm');
+    entryContainer.insertAdjacentElement('afterend', editForm);
+    editForm.style.display = 'block';
+}
 
 function saveEdit() {
     const editTextArea = document.getElementById('editTextArea');
