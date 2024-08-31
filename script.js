@@ -79,7 +79,7 @@ function updateDailyTracker() {
         months[monthYear].push({ date, entries: savedEntries[date] });
     });
 
-    const sortedMonths = Object.keys(months).sort((a, b) => new Date(b.replace('-', '/')) - new Date(a.replace('-', '/')));
+    const sortedMonths = Object.keys(months).sort((a, b) => new Date(a.replace('-', '/')) - new Date(b.replace('-', '/')));
 
     if (sortedMonths.length === 0) {
         dailyTrackerContainer.innerHTML = '<p>no entries found . . . ໒꒰ྀིっ -｡꒱ྀི১ </p>';
@@ -101,7 +101,7 @@ function updateDailyTracker() {
                     <path d="M7 10l5 5 5-5H7z"/> 
                 </svg>
             </div>
-        `;    
+        `;
 
         const monthEntriesContainer = document.createElement('div');
         monthEntriesContainer.className = 'monthEntriesContainer';
@@ -189,6 +189,7 @@ function updateDailyTracker() {
         };
     });
 }
+
 
 function editEntry(date, id, text, entryContainer) {
     editDate = date;
