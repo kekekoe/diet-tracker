@@ -77,7 +77,7 @@ function updateDailyTracker() {
         dateHeader.style.fontStyle = 'italic';
         dateHeader.style.fontSize = 'large';
         dateHeader.style.marginBottom = '-5px';
-        dateHeader.style.marginTop = '5px';
+        dateHeader.style.marginTop = '10px';
         dateHeader.className = 'dateHeader';
 
         dailyTrackerContainer.appendChild(dateHeader);
