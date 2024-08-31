@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="styles.css">
     <script src="script.js" defer></script>
-    <title>riri's tracker ꒰ᐢ. .ᐢ꒱</title>
+    <title>riri's tracker ꒰ᐢ. .ᐢ꒱ </title>
 </head>
 <body>
     <div class="page">
@@ -20,32 +20,11 @@
             </div>
         </div>
         <div class="main" id="main">
-            <div class="container">
+            <div class="container weight">
                 <p style="font-size: larger;">weight </p>
-                <div class="weightEntries">
-                </div>
+                <div class="weightEntries"></div>
             </div>
         </div>
     </div>
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            updateWeightTracker();
-        });
-
-        function updateWeightTracker() {
-            const weightContainer = document.querySelector('.page .main .container .weightEntries');
-
-            let savedWeights = JSON.parse(localStorage.getItem('weightEntries')) || {};
-
-            weightContainer.innerHTML = '';
-
-            Object.keys(savedWeights).forEach(date => {
-                const entry = savedWeights[date];
-                const weightEntry = document.createElement('p');
-                weightEntry.innerText = `${date}: ${entry.weight}kg, bmi ${entry.bmi}`;
-                weightContainer.appendChild(weightEntry);
-            });
-        }
-    </script>
 </body>
 </html>
