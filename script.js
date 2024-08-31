@@ -57,14 +57,23 @@ function addExercise() {
 
 function updateDailyTracker() {
     const dailyTrackerContainer = document.querySelector('.container .textCals');
-    let savedEntries = JSON.parse(localStorage.getItem('dailyTrackerEntries')) || {};
+    let savedEntries = getSavedEntries();
+    let savedWeights = getSavedWeights();
 
     dailyTrackerContainer.innerHTML = '';
     const sortedDates = Object.keys(savedEntries).sort((a, b) => new Date(b) - new Date(a));
 
+    if (sortedDates.length === 0) {
+        dailyTrackerContainer.innerHTML = '<p>no entries found . . . ໒꒰ྀིっ -｡꒱ྀི১ </p>';
+        return;
+    }
+
     sortedDates.forEach(date => {
+        const weightDisplay = savedWeights[date] ? `${savedWeights[date].weight}kg` : 'No weight data';
+        const dateHeaderText = `${date}: ${weightDisplay}`;
+
         const dateHeader = document.createElement('p');
-        dateHeader.innerText = `${date}:`;
+        dateHeader.innerText = dateHeaderText;
         dateHeader.style.fontStyle = 'italic';
         dateHeader.style.fontSize = 'large';
         dateHeader.style.marginBottom = '0px';
@@ -110,27 +119,6 @@ function updateDailyTracker() {
 
         dailyTrackerContainer.appendChild(dateEntriesContainer);
     });
-}
-
-function editEntry(date, id, entryText, entryContainer) {
-    const editForm = document.getElementById('editForm');
-    const editTextArea = document.getElementById('editTextArea');
-
-    editDate = date;
-    editIndex = id;
-
-    const [time, ...textParts] = entryText.split(' - ');
-    const newText = textParts.join(' - ');
-
-    editForm.style.top = `${entryContainer.offsetTop}px`;
-    editForm.style.left = `${entryContainer.offsetLeft}px`;
-    editTextArea.value = newText;
-    editForm.style.display = 'block';
-
-    currentEditElement = {
-        container: entryContainer,
-        time: time
-    };
 }
 
 function saveEdit() {
@@ -311,4 +299,12 @@ function loadSavedWeightData() {
 function loadSavedData() {
     updateDailyTracker();
     updateReports();
+}
+
+function getSavedEntries() {
+    return JSON.parse(localStorage.getItem('dailyTrackerEntries')) || {};
+}
+
+function getSavedWeights() {
+    return JSON.parse(localStorage.getItem('weightEntries')) || {};
 }
