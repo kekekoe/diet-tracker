@@ -73,13 +73,16 @@ function updateDailyTracker() {
         const monthYear = `${year}-${month}`; 
 
         if (!months[monthYear]) {
-            months[monthYear] = [];
+            months[monthYear] = { entries: [], mostRecentDate: date };
         }
 
-        months[monthYear].push({ date, entries: savedEntries[date] });
+        months[monthYear].entries.push({ date, entries: savedEntries[date] });
+        if (new Date(date) > new Date(months[monthYear].mostRecentDate)) {
+            months[monthYear].mostRecentDate = date;
+        }
     });
 
-    const sortedMonths = Object.keys(months).sort((a, b) => new Date(b.replace('-', '/')) - new Date(a.replace('-', '/')));
+    const sortedMonths = Object.keys(months).sort((a, b) => new Date(months[b].mostRecentDate) - new Date(months[a].mostRecentDate));
 
     if (sortedMonths.length === 0) {
         dailyTrackerContainer.innerHTML = '<p>no entries found . . . ໒꒰ྀིっ -｡꒱ྀི১ </p>';
@@ -113,7 +116,7 @@ function updateDailyTracker() {
             monthEntriesContainer.style.display = 'none';
         }
 
-        const sortedDates = months[monthYear].sort((a, b) => new Date(b.date) - new Date(a.date));
+        const sortedDates = months[monthYear].entries.sort((a, b) => new Date(b.date) - new Date(a.date));
 
         sortedDates.forEach(({ date, entries }) => {
             const weightDisplay = savedWeights[date] ? `${savedWeights[date].weight}kg` : 'no weight data';
