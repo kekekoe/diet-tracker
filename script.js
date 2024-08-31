@@ -13,14 +13,15 @@ function addFood() {
     const date = new Date();
     const formattedDate = `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;
     const time = `${date.getHours()}:${date.getMinutes() < 10 ? '0' : ''}${date.getMinutes()}`;
-    const entry = `${time} - ${foodInput}`;
+    const id = Date.now(); 
+    const entry = { id, text: `${time} - ${foodInput}` };
 
     let savedEntries = JSON.parse(localStorage.getItem('dailyTrackerEntries')) || {};
     if (!savedEntries[formattedDate]) {
         savedEntries[formattedDate] = [];
     }
 
-    savedEntries[formattedDate].push({ text: entry });
+    savedEntries[formattedDate].push(entry);
     localStorage.setItem('dailyTrackerEntries', JSON.stringify(savedEntries));
 
     document.getElementById('foodInput').value = '';
@@ -28,52 +29,75 @@ function addFood() {
     updateDailyTracker();
 }
 
+function addExercise() {
+    const exerciseCaloriesInput = document.getElementById('caloriesBurned').value;
+    if (exerciseCaloriesInput.trim() === '' || isNaN(exerciseCaloriesInput)) return;
+
+    const date = new Date();
+    const formattedDate = `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;
+    const time = `${date.getHours()}:${date.getMinutes() < 10 ? '0' : ''}${date.getMinutes()}`;
+    const caloriesBurned = parseInt(exerciseCaloriesInput);
+    const id = Date.now(); 
+    const entry = { id, text: `${time} - exercise: -${caloriesBurned}cals` };
+
+    let savedEntries = JSON.parse(localStorage.getItem('dailyTrackerEntries')) || {};
+    if (!savedEntries[formattedDate]) {
+        savedEntries[formattedDate] = [];
+    }
+
+    savedEntries[formattedDate].push(entry);
+    localStorage.setItem('dailyTrackerEntries', JSON.stringify(savedEntries));
+
+    document.getElementById('caloriesBurned').value = '';
+
+    updateDailyTracker();
+    updateReports();
+}
+
+
 function updateDailyTracker() {
-    const dailyTrackerContainer = document.querySelector('.container.daily .textCals');
+    const dailyTrackerContainer = document.querySelector('.container .textCals');
     let savedEntries = JSON.parse(localStorage.getItem('dailyTrackerEntries')) || {};
 
     dailyTrackerContainer.innerHTML = '';
-
     const sortedDates = Object.keys(savedEntries).sort((a, b) => new Date(b) - new Date(a));
 
     sortedDates.forEach(date => {
         const dateHeader = document.createElement('p');
         dateHeader.innerText = `${date}`;
         dateHeader.style.fontWeight = 'bold';
-        dateHeader.className = 'dateHeader'; 
+        dateHeader.className = 'dateHeader';
 
         dailyTrackerContainer.appendChild(dateHeader);
 
         const dateEntriesContainer = document.createElement('div');
         dateEntriesContainer.className = 'dateEntriesContainer';
 
-        savedEntries[date].reverse().forEach((entry, index) => {
+        savedEntries[date].reverse().forEach(entry => {
             const entryContainer = document.createElement('div');
             entryContainer.className = 'entryContainer';
 
             const entryContent = document.createElement('div');
             entryContent.className = 'entryContent';
-            entryContent.innerHTML = `
-                <p>${entry.text}</p>
-            `;
+            entryContent.innerHTML = `<p>${entry.text}</p>`;
 
             const buttonContainer = document.createElement('div');
             buttonContainer.className = 'buttonContainer';
             buttonContainer.innerHTML = `
-                <button class="editButton">
-                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed">
-                        <path d="M200-200h57l391-391-57-57-391 391v57Zm-80 80v-170l528-527q12-11 26.5-17t30.5-6q16 0 31 6t26 18l55 56q12 11 17.5 26t5.5 30q0 16-5.5 30.5T817-647L290-120H120Zm640-584-56-56 56 56Zm-141 85-28-29 57 57-29-28Z"/>
+                <button class="editButton" data-id="${entry.id}">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#e8eaed">
+                        <path d="M3 17.25V21h3.75L15 14.25l-3.75-3.75L3 17.25zM15.28 6.72l1.48 1.48-6.3 6.3-1.48-1.48 6.3-6.3zM16.89 4.5l1.59 1.59c.25.25.39.58.39.93s-.14.68-.39.93l-7.38 7.38-1.56-1.56 7.38-7.38c.25-.25.58-.39.93-.39s.68.14.93.39z"/>
                     </svg>
                 </button>
-                <button class="deleteButton">
-                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed">
-                        <path d="m376-300 104-104 104 104 56-56-104-104 104-104-56-56-104 104-104-104-56 56 104 104-104 104 56 56Zm-96 180q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520Zm-400 0v520-520Z"/>
+                <button class="deleteButton" data-id="${entry.id}">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#e8eaed">
+                        <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zm2-14h8V4H8v1zm2 10h-2v-6h2v6zm4-6h-2v6h2v-6zm4-1h-1V3H5v1H4v2h16V4h-1v1z"/>
                     </svg>
                 </button>
             `;
 
-            buttonContainer.querySelector('.editButton').onclick = () => editEntry(date, index, entry.text, entryContainer);
-            buttonContainer.querySelector('.deleteButton').onclick = () => deleteEntry(date, index);
+            buttonContainer.querySelector('.editButton').onclick = () => editEntry(date, entry.id, entry.text, entryContainer);
+            buttonContainer.querySelector('.deleteButton').onclick = () => deleteEntry(date, entry.id);
 
             entryContainer.appendChild(entryContent);
             entryContainer.appendChild(buttonContainer);
@@ -85,12 +109,12 @@ function updateDailyTracker() {
     });
 }
 
-function editEntry(date, index, entryText, entryContainer) {
+function editEntry(date, id, entryText, entryContainer) {
     const editForm = document.getElementById('editForm');
     const editTextArea = document.getElementById('editTextArea');
-    
+
     editDate = date;
-    editIndex = index;
+    editIndex = id;
 
     const [time, ...textParts] = entryText.split(' - ');
     const newText = textParts.join(' - ');
@@ -112,28 +136,28 @@ function saveEdit() {
 
     if (editDate && editIndex > -1 && currentEditElement) {
         const updatedEntry = `${currentEditElement.time} - ${editTextArea.value}`;
-        savedEntries[editDate][editIndex].text = updatedEntry;
+        savedEntries[editDate] = savedEntries[editDate].map(entry =>
+            entry.id === editIndex ? { id: entry.id, text: updatedEntry } : entry
+        );
         localStorage.setItem('dailyTrackerEntries', JSON.stringify(savedEntries));
 
         document.getElementById('editForm').style.display = 'none';
         updateDailyTracker();
+        updateReports();
     }
 }
+
 
 function cancelEdit() {
     document.getElementById('editForm').style.display = 'none';
 }
 
-function loadSavedData() {
-    updateDailyTracker();
-}
-
-function deleteEntry(date, index) {
+function deleteEntry(date, id) {
     let savedEntries = JSON.parse(localStorage.getItem('dailyTrackerEntries')) || {};
 
     if (savedEntries[date]) {
-        savedEntries[date].splice(index, 1); 
-        
+        savedEntries[date] = savedEntries[date].filter(entry => entry.id !== id);
+
         if (savedEntries[date].length === 0) {
             delete savedEntries[date];
         }
@@ -141,7 +165,13 @@ function deleteEntry(date, index) {
         localStorage.setItem('dailyTrackerEntries', JSON.stringify(savedEntries));
 
         updateDailyTracker();
+        updateReports();
     }
+}
+
+function loadSavedData() {
+    updateDailyTracker();
+    updateReports();
 }
 
 const heightInMeters = 1.49;
@@ -177,39 +207,37 @@ function calculateBMI(weight) {
     return (weight / (heightInMeters * heightInMeters)).toFixed(2);
 }
 
-const TDEE = 1596; 
-const calorieLimit = 995; 
+const TDEE = 1596;
+const calorieLimit = 995;
 
 function updateReports() {
     const now = new Date();
     const options = { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' };
     const formattedDateTime = now.toLocaleDateString('en-US', options).replace(',', '');
-    
+
     document.getElementById('dateTime').innerText = `as of ${formattedDateTime}:`;
 
     let savedWeights = JSON.parse(localStorage.getItem('weightEntries')) || {};
     let lastEntry = Object.keys(savedWeights).pop();
     let entry = savedWeights[lastEntry] || { weight: '--', bmi: '--' };
-    
+
     document.getElementById('currentWeight').innerText = `cw: ${entry.weight}kg`;
     document.getElementById('currentBMI').innerText = `cbmi: ${entry.bmi}`;
 
-    const goalWeight = 35; 
+    const goalWeight = 35;
     const weightToLose = goalWeight - parseFloat(entry.weight || 0);
     document.getElementById('kgToLose').innerText = `kg to lose: ${weightToLose.toFixed(1)}`;
 
-    let savedExercises = JSON.parse(localStorage.getItem('exerciseEntries')) || {};
-    const today = new Date();
-    const formattedDate = `${today.getMonth() + 1}/${today.getDate()}/${today.getFullYear()}`;
-    const caloriesBurned = savedExercises[formattedDate] || 0;
-    const totalCaloriesConsumed = calculateTotalCaloriesConsumed() - caloriesBurned;
-    const caloriesLost = TDEE - totalCaloriesConsumed;
-    const caloriesLeft = calorieLimit - totalCaloriesConsumed;
+    const totalCaloriesConsumed = calculateTotalCaloriesConsumed();
+    const totalExerciseCalories = calculateTotalExerciseCalories();
+    const netCalories = totalCaloriesConsumed + totalExerciseCalories;
+    const caloriesLost = TDEE - netCalories;
+    const caloriesLeft = calorieLimit - netCalories;
 
     document.getElementById('totalCaloriesConsumed').innerText = `total calories consumed today: ${totalCaloriesConsumed}`;
     document.getElementById('caloriesLost').innerText = `total daily energy expenditure: ${caloriesLost}`;
     document.getElementById('caloriesLeft').innerText = `calories left: ${caloriesLeft}`;
-    document.getElementById('caloriesBurned').innerText = `calories burned from exercise: ${caloriesBurned}`;
+    document.getElementById('caloriesBurned').innerText = `calories burned from exercise: ${totalExerciseCalories}`;
     document.getElementById('calorieLimit').innerText = `calorie limit: ${calorieLimit}`;
 }
 
@@ -221,9 +249,11 @@ function calculateTotalCaloriesConsumed() {
 
     if (savedEntries[formattedDate]) {
         savedEntries[formattedDate].forEach(entry => {
-            const calories = extractCalories(entry.text);
-            if (!isNaN(calories)) {
-                totalCalories += calories;
+            if (!entry.text.includes("exercise")) { 
+                const calories = extractFoodCalories(entry.text);
+                if (!isNaN(calories)) {
+                    totalCalories += calories;
+                }
             }
         });
     }
@@ -231,8 +261,33 @@ function calculateTotalCaloriesConsumed() {
     return totalCalories;
 }
 
-function extractCalories(text) {
-    const match = text.match(/(\d+)cals?/i); 
+function calculateTotalExerciseCalories() {
+    let savedEntries = JSON.parse(localStorage.getItem('dailyTrackerEntries')) || {};
+    const today = new Date();
+    const formattedDate = `${today.getMonth() + 1}/${today.getDate()}/${today.getFullYear()}`;
+    let totalExerciseCalories = 0;
+
+    if (savedEntries[formattedDate]) {
+        savedEntries[formattedDate].forEach(entry => {
+            if (entry.text.includes("exercise")) {  
+                const calories = extractExerciseCalories(entry.text);
+                if (!isNaN(calories)) {
+                    totalExerciseCalories += calories;
+                }
+            }
+        });
+    }
+
+    return totalExerciseCalories;
+}
+
+function extractFoodCalories(text) {
+    const match = text.match(/(\d+)cals?/i);
+    return match ? parseInt(match[1], 10) : 0;
+}
+
+function extractExerciseCalories(text) {
+    const match = text.match(/(-\d+)cals?/i);
     return match ? parseInt(match[1], 10) : 0;
 }
 
@@ -260,29 +315,13 @@ function loadSavedWeightData() {
     updateWeightTracker();
 }
 
-function addExercise() {
-    const exerciseCaloriesInput = document.getElementById('caloriesBurned').value;
-
-    if (exerciseCaloriesInput.trim() === '' || isNaN(exerciseCaloriesInput)) return;
-
-    const date = new Date();
-    const formattedDate = `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;
-    const caloriesBurned = parseInt(exerciseCaloriesInput);
-
-    let savedExercises = JSON.parse(localStorage.getItem('exerciseEntries')) || {};
-    savedExercises[formattedDate] = caloriesBurned; 
-    localStorage.setItem('exerciseEntries', JSON.stringify(savedExercises));
-
-    document.getElementById('caloriesBurned').value = '';
-}
-
 function clearCaloriesBurned() {
     const today = new Date();
     const formattedDate = `${today.getMonth() + 1}/${today.getDate()}/${today.getFullYear()}`;
-    
+
     let savedExercises = JSON.parse(localStorage.getItem('exerciseEntries')) || {};
-    delete savedExercises[formattedDate]; 
+    delete savedExercises[formattedDate];
     localStorage.setItem('exerciseEntries', JSON.stringify(savedExercises));
-    
+
     updateReports();
 }
