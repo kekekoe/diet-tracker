@@ -92,7 +92,7 @@ function updateDailyTracker() {
             const entryContent = document.createElement('div');
             entryContent.className = 'entryContent';
             entryContent.innerHTML = `<p>${entry.text}</p>`;
-            entryContent.style.marginBottom = '-15px';
+            entryContent.style.marginBottom = '5px';
             entryContent.style.textIndent = '15px';
 
             const buttonContainer = document.createElement('div');
