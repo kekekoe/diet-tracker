@@ -247,6 +247,7 @@ function updateReports() {
     document.getElementById('caloriesLeft').innerText = `calories left: ${caloriesLeft}`;
     document.getElementById('caloriesBurned').innerText = `calories burned from exercise: ${totalExerciseCalories}`;
     document.getElementById('calorieLimit').innerText = `calorie limit: ${calorieLimit}`;
+    document.getElementById('stepsTakenToday').innerText = `steps taken today: ${calculateTotalSteps()}`;
 }
 
 function calculateTotalCaloriesConsumed() {
@@ -318,4 +319,53 @@ function getSavedEntries() {
 
 function getSavedWeights() {
     return JSON.parse(localStorage.getItem('weightEntries')) || {};
+}
+
+function addSteps() {
+    const stepsInput = document.getElementById('stepsTaken').value;
+    if (stepsInput.trim() === '' || isNaN(stepsInput)) return;
+
+    const date = new Date();
+    const formattedDate = `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;
+    const stepsTaken = parseInt(stepsInput);
+    const id = Date.now();
+    const entry = { id, text: `${date.getHours()}:${date.getMinutes() < 10 ? '0' : ''}${date.getMinutes()} - steps: ${stepsTaken}` };
+
+    let savedEntries = JSON.parse(localStorage.getItem('dailyTrackerEntries')) || {};
+    if (!savedEntries[formattedDate]) {
+        savedEntries[formattedDate] = [];
+    }
+
+    savedEntries[formattedDate].push(entry);
+    localStorage.setItem('dailyTrackerEntries', JSON.stringify(savedEntries));
+
+    document.getElementById('stepsTaken').value = '';
+
+    updateDailyTracker();
+    updateReports();
+}
+
+function calculateTotalSteps() {
+    let savedEntries = JSON.parse(localStorage.getItem('dailyTrackerEntries')) || {};
+    const today = new Date();
+    const formattedDate = `${today.getMonth() + 1}/${today.getDate()}/${today.getFullYear()}`;
+    let totalSteps = 0;
+
+    if (savedEntries[formattedDate]) {
+        savedEntries[formattedDate].forEach(entry => {
+            if (entry.text.includes("steps:")) {
+                const steps = extractSteps(entry.text);
+                if (!isNaN(steps)) {
+                    totalSteps += steps;
+                }
+            }
+        });
+    }
+
+    return totalSteps;
+}
+
+function extractSteps(text) {
+    const match = text.match(/steps:\s*(\d+)/i);
+    return match ? parseInt(match[1], 10) : 0;
 }
