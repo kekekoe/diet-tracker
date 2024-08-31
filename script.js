@@ -79,7 +79,7 @@ function updateDailyTracker() {
         months[monthYear].push({ date, entries: savedEntries[date] });
     });
 
-    const sortedMonths = Object.keys(months).sort((a, b) => new Date(b) - new Date(a));
+    const sortedMonths = Object.keys(months).sort((a, b) => new Date(b.replace('-', '/')) - new Date(a.replace('-', '/')));
 
     if (sortedMonths.length === 0) {
         dailyTrackerContainer.innerHTML = '<p>no entries found . . . ໒꒰ྀིっ -｡꒱ྀི১ </p>';
