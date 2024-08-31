@@ -204,8 +204,8 @@ function updateWeightTracker() {
     });
 }
 
-const TDEE = 1596;
-const calorieLimit = 995;
+const BMR = 1127;
+const calorieLimit = 500;
 
 function updateReports() {
     const now = new Date();
@@ -228,7 +228,7 @@ function updateReports() {
     const totalCaloriesConsumed = calculateTotalCaloriesConsumed();
     const totalExerciseCalories = calculateTotalExerciseCalories();
     const netCalories = totalCaloriesConsumed + totalExerciseCalories;
-    const caloriesLost = TDEE - netCalories;
+    const caloriesLost = BMR - netCalories;
     const caloriesLeft = calorieLimit - netCalories;
 
     document.getElementById('totalCaloriesConsumed').innerText = `total calories consumed today: ${totalCaloriesConsumed}`;
