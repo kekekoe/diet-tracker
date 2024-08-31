@@ -1,89 +1,95 @@
 body {
     background-color: #fbfbf2;
-    margin: 0; 
-    padding: 0; 
+    margin: 0;
+    padding: 0;
 }
 
 .header {
     background-color: #fff0fe;
-    width: 100%; 
-    height: 80px;
-    position: fixed; 
+    width: 100%;
+    height: 65px;
+    position: fixed;
     top: 0;
-    z-index: 1000; 
+    z-index: 1000;
 }
 
 .items {
-    margin-top: 20px; 
+    margin-top: -2px;
 
     ul {
         list-style-type: none;
     }
-    
+
     li {
-        display: inline; 
+        display: inline;
         margin-right: 30px;
         font-size: large;
         color: #d1b3c6;
     }
 
     a {
-        text-decoration: none; 
+        text-decoration: none;
         color: inherit;
-        padding: 10px; 
-        display: inline-block; 
+        padding: 10px;
+        display: inline-block;
     }
-    
+
     a:hover {
-        color: #b99eaf; 
-        cursor: pointer; 
+        color: #b99eaf;
+        cursor: pointer;
     }
 }
 
 .main {
-    padding-top: 80px; 
+    padding-top: 80px;
 }
 
-.home {
-    text-align: center;
-
-    p {
-        padding: 8px;
-        margin-top: 2px;
-        margin-bottom: 0;
-    }
-}
-
-.container{
+.home, .container {
     background-color: #fff;
     width: 500px;
     border-radius: 5px;
-    margin: auto;
-    margin-top: 30px;
+    margin: 20px auto;
     padding: 20px;
     font-size: medium;
 }
 
-.textCals{
+.home {
+    margin-top: 25px;
+    text-align: center;
+
+    p {
+        padding: 8px;
+        margin: 2px 0 0 0;
+    }
+    
+}
+
+.textCals {
     margin-left: 10px;
 }
 
-.entryContainer button {
-    background: none;
-    border: none;
-    cursor: pointer;
-    margin: 0 5px;
-    padding: 0;
-    display: inline-flex;
+.entryContainer {
+    display: flex;
     align-items: center;
 }
 
-textarea#foodInput {
-    width: 490px; 
-    height: 20px; 
+.entryContainer button,
+.buttonContainer button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    display: inline-flex;
+    align-items: center;
+    margin: 0 5px;
 }
 
-.reports{
+textarea#foodInput {
+    width: 490px;
+    height: 20px;
+}
+
+.reports {
     ul {
         list-style-type: none;
         padding: 0;
@@ -92,80 +98,36 @@ textarea#foodInput {
     }
 
     li {
-        display: block;
         font-size: medium;
         margin: 10px 0;
     }
 }
 
-.entry-image {
-    display: none; 
-    max-width: 200px;
-    margin-top: 10px;
-}
-
-.modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.7); 
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 9999;
-}
-
-.modal-image {
-    max-width: 90%;
-    max-height: 80%;
-    height: auto;
-}
-
-.modal-close-button {
-    position: absolute; 
-    top: 10px;
-    right: 10px;
-    background: white;
-    border: none;
-    border-radius: 5px;
-    padding: 5px 10px;
-    cursor: pointer;
-    z-index: 10000;
-}
-
-@media(max-width: 800px){
-    .container{
-        width: 330px;
-        margin-top: 10px;
+@media (max-width: 800px) {
+    .container,
+    .home {
+        width: 75%;
+        margin-top: 15px;
     }
 
-    #home{
-        margin-top: 20px;
-    }
     textarea#foodInput {
-        width: 320px; 
-        height: 20px; 
+        width: 140px;
+        height: 20px;
+    }
+
+    .header {
+        ul {
+            margin-left: -20px;
+        }
+
+        li {
+            font-size: larger;
+        }
     }
 
     textarea#editTextArea {
-        width: 270px; 
-        height: 80px; 
+        width: 330px;
     }
-
-    .header{
-        li{
-            margin-right: 5px;
-            font-size: medium;
-        }
-        
-    }
-}
-
-.entryContainer {
-    display: flex;
-    align-items: center;
 }
 
 .entryContent {
@@ -179,23 +141,13 @@ textarea#foodInput {
     align-items: center;
 }
 
-.buttonContainer button {
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 0;
-    display: inline-flex;
-    align-items: center;
-}
-
 .entryContainer svg {
     width: 20px;
     height: 20px;
-    fill: #333; 
-}
-
-.buttonContainer button:hover svg {
-    fill: #121212; 
+    fill: #333;
+    background-color: none;
+    border: none;
+    box-shadow: none;
 }
 
 hr {
@@ -204,12 +156,24 @@ hr {
     border: 0;
     border-top: 1px solid #ccc;
     margin: 1em 0;
-    padding: 0;
-  }
+}
 
 .dateHeader {
     font-style: italic;
     font-size: large;
-    margin-bottom: 0px;
-    margin-top: 20px;
+    margin: 20px 0 0 0;
+}
+
+input {
+    width: 210px;
+    box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2px;
+    border: 1px solid #f7f7f7;
+}
+
+.trackButton {
+    background-color: #fff;
+    border: none;
+    border-radius: 5px;
+    width: 53px;
+    box-shadow: rgba(149, 157, 165, 0.4) 0px 2px 2px;
 }

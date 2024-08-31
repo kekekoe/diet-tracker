@@ -76,8 +76,8 @@ function updateDailyTracker() {
         dateHeader.innerText = dateHeaderText;
         dateHeader.style.fontStyle = 'italic';
         dateHeader.style.fontSize = 'large';
-        dateHeader.style.marginBottom = '0px';
-        dateHeader.style.marginTop = '20px';
+        dateHeader.style.marginBottom = '-5px';
+        dateHeader.style.marginTop = '-5px';
         dateHeader.className = 'dateHeader';
 
         dailyTrackerContainer.appendChild(dateHeader);
@@ -92,6 +92,8 @@ function updateDailyTracker() {
             const entryContent = document.createElement('div');
             entryContent.className = 'entryContent';
             entryContent.innerHTML = `<p>${entry.text}</p>`;
+            entryContent.style.marginBottom = '-15px';
+            entryContent.style.textIndent = '15px';
 
             const buttonContainer = document.createElement('div');
             buttonContainer.className = 'buttonContainer';
@@ -120,6 +122,15 @@ function updateDailyTracker() {
         dailyTrackerContainer.appendChild(dateEntriesContainer);
     });
 }
+
+function editEntry(date, id, text, entryContainer) {
+    editDate = date;
+    editIndex = id;
+    currentEditElement = { time: text.split(' - ')[0], text: text.split(' - ')[1] };
+    document.getElementById('editTextArea').value = currentEditElement.text;
+    document.getElementById('editForm').style.display = 'block';
+}
+
 
 function saveEdit() {
     const editTextArea = document.getElementById('editTextArea');
@@ -204,15 +215,15 @@ function updateWeightTracker() {
     });
 }
 
-const BMR = 1127;
-const calorieLimit = 500;
+const TDEE = 1554; 
+const calorieLimit = 700; 
 
 function updateReports() {
     const now = new Date();
     const options = { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' };
     const formattedDateTime = now.toLocaleDateString('en-US', options).replace(',', '');
 
-    document.getElementById('dateTime').innerText = `as of ${formattedDateTime}:`;
+    document.getElementById('dateTime').innerText = `as of ${formattedDateTime}`;
 
     let savedWeights = JSON.parse(localStorage.getItem('weightEntries')) || {};
     let lastEntry = Object.keys(savedWeights).pop();
@@ -227,12 +238,12 @@ function updateReports() {
 
     const totalCaloriesConsumed = calculateTotalCaloriesConsumed();
     const totalExerciseCalories = calculateTotalExerciseCalories();
-    const netCalories = totalCaloriesConsumed + totalExerciseCalories;
-    const caloriesLost = BMR - netCalories;
-    const caloriesLeft = calorieLimit - netCalories;
+    const netCalories = totalCaloriesConsumed - totalExerciseCalories; 
+    const caloriesLost = TDEE - netCalories; 
+    const caloriesLeft = calorieLimit - totalCaloriesConsumed + totalExerciseCalories; 
 
     document.getElementById('totalCaloriesConsumed').innerText = `total calories consumed today: ${totalCaloriesConsumed}`;
-    document.getElementById('caloriesLost').innerText = `total daily energy expenditure: ${caloriesLost}`;
+    document.getElementById('caloriesLost').innerText = `caloric deficit/surplus: ${caloriesLost}`;
     document.getElementById('caloriesLeft').innerText = `calories left: ${caloriesLeft}`;
     document.getElementById('caloriesBurned').innerText = `calories burned from exercise: ${totalExerciseCalories}`;
     document.getElementById('calorieLimit').innerText = `calorie limit: ${calorieLimit}`;
@@ -284,7 +295,7 @@ function extractFoodCalories(text) {
 }
 
 function extractExerciseCalories(text) {
-    const match = text.match(/(-\d+)cals?/i);
+    const match = text.match(/(\d+)cals?/i);
     return match ? parseInt(match[1], 10) : 0;
 }
 

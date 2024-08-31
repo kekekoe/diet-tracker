@@ -13,31 +13,31 @@
             <div class="items">
                 <ul>
                     <li><a href="index.html">home</a></li>
-                    <li><a href="daily.html">daily tracker</a></li>
+                    <li><a href="daily.html">tracker</a></li>
                     <li><a href="reports.html">reports</a></li>
                 </ul>
             </div>
         </div>
         <div class="main" id="main">
-            <div class="container home" id="home">
+            <div class="home" id="home">
                 <p style="font-size: large;">welcome to your "diet" tracker, riri >ᴗ< .ᐟ</p>
             </div>
             <div class="container track">
-                <p>what did you eat ?</p>
-                <textarea id="foodInput" placeholder="what did your fatass eat just now..."></textarea>
-                <br><button onclick="addFood()">track</button>
+                <p style="margin-top: -1px;">what did you eat ?</p>
+                <input id="foodInput" placeholder="what did your fatass eat just now..."></input>
+                <button class="trackButton" onclick="addFood()">track</button>
             </div>
 
             <div class="container trackWeight">
-                <p>how much do you weigh today?</p>
+                <p style="margin-top: -1px;">how much do you weigh today?</p>
                 <input type="number" id="weightInput" placeholder="enter weight in kg">
-                <button onclick="addWeight()">track</button>
+                <button class="trackButton" onclick="addWeight()">track</button>
             </div>
 
             <div class="container trackExercise">
-                <p>did you exercise today?</p>
+                <p style="margin-top: -1px;">did you exercise today?</p>
                 <input type="number" id="caloriesBurned" placeholder="enter calories burned">
-                <button onclick="addExercise()">track</button>
+                <button class="trackButton" onclick="addExercise()">track</button>
             </div>
         </div>
     </div>
