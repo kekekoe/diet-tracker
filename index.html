@@ -20,48 +20,48 @@
         </div>
         <div class="main" id="main">
             <div class="home" id="home">
-                <p style="font-size: large;">welcome to your "diet" tracker, riri >ᴗ< .ᐟ</p>
+                <p style="font-size: large;">⊹ ࣪ ˖ diet tracker ૮꒰ ˶• ༝ •˶꒱ა</p>
             </div>
-            <div class="container track">
-                <p style="margin-top: -1px;">what did you eat ?</p>
-                <input id="foodInput" placeholder="what did your fatass eat just now..."></input>
-                <button class="trackButton" onclick="addFood()">track</button>
-            </div>
+            <div class="questions">
+                <div class="track">
+                    <input id="foodInput" placeholder="what did your fatass eat just now..."></input>
+                    <button class="trackButton" onclick="addFood()">track</button>
+                </div>
+    
+                <div class="trackWeight">
+                    <input type="number" id="weightInput" placeholder="enter weight in kg">
+                    <button class="trackButton" onclick="addWeight()">track</button>
+                </div>
+    
+                <div class="trackSteps">
+                    <input type="number" id="stepsTaken" placeholder="enter today's steps">
+                    <button class="trackButton" onclick="addSteps()">track</button>
+                </div>
+    
+                <div class="trackExercise">
+                    <input type="number" id="caloriesBurned" placeholder="enter calories lost (exercise/purge)">
+                    <button class="trackButton" onclick="addExercise()">track</button>
+                </div>
+    
+                <div class="enterNewGoalWeight">
+                    <input type="number" id="enterNewGoalWeight" placeholder="enter new goal weight">
+                    <button class="trackButton" onclick="addGoalWeight()">track</button>
+                </div>
+    
+                <div class= "newCalorieLimit">
+                    <input type="number" id="newCalorieLimit" placeholder="enter new calorie limit">
+                    <button class="trackButton" onclick="addNewCalorieLimit()">track</button>
+                </div>
 
-            <div class="container trackWeight">
-                <p style="margin-top: -1px;">how much do you weigh today ?</p>
-                <input type="number" id="weightInput" placeholder="enter weight in kg">
-                <button class="trackButton" onclick="addWeight()">track</button>
+                <div class= "newTDEE">
+                    <input type="number" id="newTDEE" placeholder="enter new TDEE">
+                    <button class="trackButton" onclick="addNewTDEE()">track</button>
+                </div>
+            </div>    
             </div>
-
-            <div class="container trackSteps">
-                <p style="margin-top: -1px;">how many steps today ?</p>
-                <input type="number" id="stepsTaken" placeholder="enter today's steps">
-                <button class="trackButton" onclick="addSteps()">track</button>
-            </div>
-
-            <div class="container trackExercise">
-                <p style="margin-top: -1px;">did you exercise (or purge) today ?</p>
-                <input type="number" id="caloriesBurned" placeholder="enter calories burned">
-                <button class="trackButton" onclick="addExercise()">track</button>
-            </div>
-
-            <div class="container enterNewGoalWeight">
-                <p style="margin-top: -1px;">do you have a new goal weight ?</p>
-                <input type="number" id="enterNewGoalWeight" placeholder="enter new goal weight">
-                <button class="trackButton" onclick="addGoalWeight()">track</button>
-            </div>
-
-            <div class="container newCalorieLimit">
-                <p style="margin-top: -1px;">do you have a new calorie limit ?</p>
-                <input type="number" id="newCalorieLimit" placeholder="enter new calorie limit">
-                <button class="trackButton" onclick="addNewCalorieLimit()">track</button>
-            </div>
-        </div>
-
-        <div class="footer">
-            <p>riribinbin</p>
-        </div>
+    </div>
+    <div class="footer">
+        <p>riribinbin</p>
     </div>
 </body>
 </html>

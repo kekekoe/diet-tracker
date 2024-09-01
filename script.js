@@ -289,8 +289,6 @@ function updateWeightTracker() {
     });
 }
 
-const TDEE = 1554; 
-
 function updateReports() {
     const now = new Date();
     const options = { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' };
@@ -309,13 +307,13 @@ function updateReports() {
 
     const goalWeight = getGoalWeight(); 
     document.getElementById('goalWeight').innerText = `gw: ${goalWeight}kg`;
-
     const weightToLose = goalWeight - parseFloat(latestWeightEntry.weight || 0);
     document.getElementById('kgToLose').innerText = `kg to lose: ${weightToLose.toFixed(1)}`;
 
     const totalCaloriesConsumed = calculateTotalCaloriesConsumed();
     const totalExerciseCalories = calculateTotalExerciseCalories();
     const netCalories = totalCaloriesConsumed - totalExerciseCalories;
+    const TDEE = parseInt(localStorage.getItem('TDEE'), 10) || 1554; 
     const caloriesLost = TDEE - netCalories; 
     const caloriesLeft = getCalorieLimit() - totalCaloriesConsumed + totalExerciseCalories; 
 
@@ -475,4 +473,15 @@ function getGoalWeight() {
 
 function getCalorieLimit() {
     return parseInt(localStorage.getItem('calorieLimit')) || 700;
+}
+
+function addNewTDEE() {
+    const tdeeInput = document.getElementById('newTDEE').value;
+    if (tdeeInput.trim() === '' || isNaN(tdeeInput)) return;
+
+    const newTDEE = parseInt(tdeeInput, 10);
+    localStorage.setItem('TDEE', newTDEE);
+
+    document.getElementById('newTDEE').value = '';
+    updateReports();
 }
