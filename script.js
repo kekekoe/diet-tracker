@@ -316,6 +316,7 @@ function updateReports() {
     const TDEE = parseInt(localStorage.getItem('TDEE'), 10) || 1554; 
     const caloriesLost = TDEE - netCalories; 
     const caloriesLeft = getCalorieLimit() - totalCaloriesConsumed + totalExerciseCalories; 
+    const BMR = parseInt(localStorage.getItem('BMR'), 10) || 1120;
 
     document.getElementById('totalCaloriesConsumed').innerText = `total calories consumed today: ${totalCaloriesConsumed}`;
     document.getElementById('caloriesLost').innerText = `caloric deficit/surplus: ${caloriesLost}`;
@@ -323,6 +324,8 @@ function updateReports() {
     document.getElementById('caloriesBurned').innerText = `calories burned from exercise: ${totalExerciseCalories}`;
     document.getElementById('calorieLimit').innerText = `calorie limit: ${getCalorieLimit()}`;
     document.getElementById('stepsTakenToday').innerText = `steps taken today: ${calculateTotalSteps()}`;
+    document.getElementById('bmrDisplay').innerText = `bmr: ${BMR}`;
+    
 }
 
 function calculateTotalCaloriesConsumed() {
@@ -483,5 +486,17 @@ function addNewTDEE() {
     localStorage.setItem('TDEE', newTDEE);
 
     document.getElementById('newTDEE').value = '';
+    updateReports();
+}
+
+function addNewBMR() {
+    const bmrInput = document.getElementById('newBMR').value;
+    if (bmrInput.trim() === '' || isNaN(bmrInput)) return;
+
+    const newBMR = parseInt(bmrInput);
+    localStorage.setItem('BMR', newBMR);
+
+    document.getElementById('newBMR').value = '';
+
     updateReports();
 }
