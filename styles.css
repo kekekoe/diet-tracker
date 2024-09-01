@@ -124,7 +124,7 @@ textarea#foodInput {
 
 @media (max-width: 800px) {
     .container,
-    .home, .questions {
+    .home {
         width: 80%;
         margin-top: 15px;
     }
