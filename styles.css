@@ -1,5 +1,8 @@
 body {
     background-color: #fbfbf2;
+    min-height: 400px;
+    margin-bottom: 100px;
+    clear: both;
 }
 
 .header {
@@ -14,8 +17,8 @@ body {
 .footer {
     background-color: #fff0fe;
     width: 100%;
-    height: 65px;
-    position: absolute;
+    min-height: 65px;
+    position: fixed;
     align-items: center;
     justify-content: center;
     display: flex;
