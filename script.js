@@ -314,7 +314,7 @@ function updateReports() {
     const totalExerciseCalories = calculateTotalExerciseCalories();
     const netCalories = totalCaloriesConsumed - totalExerciseCalories;
     const TDEE = parseInt(localStorage.getItem('TDEE'), 10) || 1554; 
-    const caloriesLost = TDEE - netCalories; 
+    const caloriesLost = TDEE - totalCaloriesConsumed; 
     const caloriesLeft = getCalorieLimit() - totalCaloriesConsumed + totalExerciseCalories; 
     const BMR = parseInt(localStorage.getItem('BMR'), 10) || 1120;
 
