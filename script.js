@@ -318,14 +318,14 @@ function updateReports() {
     const caloriesLeft = getCalorieLimit() - totalCaloriesConsumed + totalExerciseCalories; 
     const BMR = parseInt(localStorage.getItem('BMR'), 10) || 1120;
 
-    document.getElementById('totalCaloriesConsumed').innerText = `net calories: ${netCalories}`;
+    document.getElementById('totalCaloriesConsumed').innerText = `total calories consumed today: ${totalCaloriesConsumed}`;
     document.getElementById('caloriesLost').innerText = `caloric deficit/surplus: ${caloriesLost}`;
     document.getElementById('caloriesLeft').innerText = `calories left: ${caloriesLeft}`;
     document.getElementById('caloriesBurned').innerText = `calories burned from exercise: ${totalExerciseCalories}`;
     document.getElementById('calorieLimit').innerText = `calorie limit: ${getCalorieLimit()}`;
     document.getElementById('stepsTakenToday').innerText = `steps taken today: ${calculateTotalSteps()}`;
     document.getElementById('bmrDisplay').innerText = `bmr: ${BMR}`;
-    
+    document.getElementById('tdeeDiv').innerText = `tdee: ${TDEE}`;
 }
 
 function calculateTotalCaloriesConsumed() {
