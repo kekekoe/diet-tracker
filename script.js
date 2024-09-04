@@ -270,7 +270,7 @@ function addWeight() {
 }
 
 function calculateBMI(weight) {
-    return (weight / (heightInMeters * heightInMeters)).toFixed(1);
+    return (weight / (heightInMeters * heightInMeters)).toFixed(2);
 }
 
 function updateWeightTracker() {

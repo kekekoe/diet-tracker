@@ -65,24 +65,13 @@ body {
     margin: 0; 
 }
 
-.home, .container, .questions {
+.container, .questions {
     background-color: #fff;
     width: 500px;
     border-radius: 5px;
     margin: 20px auto;
     padding: 20px;
     font-size: medium;
-}
-
-.home {
-    margin-top: 25px;
-    text-align: center;
-
-    p {
-        padding: 8px;
-        margin: 2px 0 0 0;
-    }
-    
 }
 
 .textCals {
@@ -126,7 +115,6 @@ textarea#foodInput {
 
 @media (max-width: 800px) {
     .container,
-    .home,
     .questions {
         width: 80%;
         margin-top: 15px;
@@ -210,4 +198,30 @@ input {
     div{
         margin: 10px;
     }
+}
+
+.sub1_2{
+    display: inline-block;
+    margin-top: -20px;
+}
+
+.sub1{
+    float: left;
+    margin: 10px;
+    width: 40%;
+    text-align: left;
+}
+
+.sub2{
+    float: right;
+    margin: 10px;
+    width: 40%;
+    text-align: right;
+}
+
+.sub3{
+    width: 100%;
+    text-align: center;
+    margin-top: -20px;
+    text-align: center;
 }
